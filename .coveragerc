@@ -1,0 +1,2 @@
+[run]
+omit = igv_jupyterlab/tests/*
