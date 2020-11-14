@@ -1,50 +1,37 @@
+# igv-jupyterlab
 
-# igv Jupyter Extension
+igv-jupyterlab is an extension for Jupyter Lab and traditional Jupyter Notebooks which wraps igv.js.
 
-[![Binder](https://beta.mybinder.org/badge.svg)](https://mybinder.org/v2/gh/igvteam/igv-jupyter/master?filepath=examples/BamFiles.ipynb)
-=======
+This extension is a simple re-write of the official igv-jupyter. 
 
+It is not yet 100% feature complete, so please leave any requests in the issues section.
 
-igv-jupyter is an extension for [Jupyter Notebook](http://jupyter.org/) which
-wraps [igv.js](https://github.com/igvteam/igv.js).  With this
-extension you can render igv.js in a cell and call its API from
-the notebook. The extension exposes a python API that mimics the igv.js 
-Browser creation and control APIs.   Dictionaries are used for browser and track 
-configuration objects.   Track data can be loaded from local or remote 
-URLs,  or supplied directly as lists of objects.
 
 ## Installation
 
-Requirements:
-* python >= 3.6.4
-* jupyter >= 4.2.0
-
+You can install using `pip`:
 
 ```bash
-pip install igv-jupyter
+pip install igv_jupyterlab
+```
 
-# To install to configuration in your home directory
-jupyter serverextension enable --py igv
-jupyter nbextension install --py igv
-jupyter nbextension enable --py igv
+Or if you use jupyterlab:
 
+```bash
+pip install igv_jupyterlab
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+```
 
-# If using a virtual environment
-jupyter serverextension enable --py igv --sys-prefix
-jupyter nbextension install --py igv --sys-prefix
-jupyter nbextension enable --py igv --sys-prefix
-
+If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
+the nbextension:
+```bash
+jupyter nbextension enable --py [--sys-prefix|--user|--system] igv_jupyterlab
 ```
 
 ## Usage
 
-### Examples
-
-Example notebooks are available in the github repository.   To download without cloning the repository use 
-this [link](https://github.com/igvteam/igv.js-jupyter/archive/master.zip).   Notebooks are available in the
-"examples" directory.
-
-
+This extension provides a python wrapper which allows you render igv.js 
+in a cell and call its API from the notebook.
 
 ### Initialization
 
@@ -55,90 +42,82 @@ To insert an IGV instance into a cell:
 Example:
 
 ```python
-import igv
+from igv_jupyterlab import IGV
 
-b = igv.Browser({"genome": "hg19"})
+# At minimum, IGV requires a single argument, genome.
+
+# For supported genomes, a simple name may be supplied.
+IGV(genome="hg19")
+
+# For all other genomes, we must construct a configuration object.
+# A helper method supplied to make this easier.
+genome = igv.create_genome(
+    name="Human (GRCh38/hg38)",
+    fasta_url="https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
+    index_url="https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa.fai",
+    cytoband_url="https://s3.amazonaws.com/igv.broadinstitute.org/annotations/hg38/cytoBandIdeo.txt",
+)
+
+igv = IGV(genome=genome)
+
+display(igv)
 ```
 
-The igv.Browser initializer takes a configuration object which is converted to JSON and passed to the igv.js
-createBrowser function.   The configuration object is described in the
-[igv.js documentation](https://github.com/igvteam/igv.js/wiki/Browser-Configuration-2.0).
-
-
-To instantiate the client side IGV instance in a cell call show()
-
+Supported genomes are [listed here](https://s3.amazonaws.com/igv.org.genomes/genomes.json).
+Reference configuration is described in the [igv.js documentation](https://github.com/igvteam/igv.js/wiki/Reference-Genome).
 
 ```python
-b.show()
+# It is also easy to change the genome to something else
+some_other_genome = igv.create_genome(...)
+
+igv.load_genome(some_other_genome)
 ```
 
 ### Tracks
 
 To load a track pass a track configuration object to load_track().  Track configuration
 objects are described in the [igv.js documentation](https://github.com/igvteam/igv.js/wiki/Tracks-2.0).
-The configuration object will be converted to JSON and passed to the igv.js browser
-instance.
-
-Data for the track can be loaded by URL or passed directly as an array of JSON objects.
-
 
 #### Remote URL
 
 ```python
-b.load_track(
+track = IGV.create_track(
     {
         "name": "Segmented CN",
         "url": "https://data.broadinstitute.org/igvdata/test/igv-web/segmented_data_080520.seg.gz",
         "format": "seg",
         "indexed": False
-    })
+    }
+)
 
+igv.load_track(track)
 ```
 
 #### Local File
 
-Tracks can be loaded from local files using the Jupyter web server by prepending "files" to the path.  The path
-is relative to the notebook file.  
+Tracks can be loaded from local files using the Jupyter web server by prepending "files" to the path.
+The path is relative to the notebook file.  
 
 ```python
-b.load_track(
+track = IGV.load_track(
     {
         "name": "Local VCF",
         "url": "files/data/example.vcf",
         "format": "vcf",
         "type": "variant",
         "indexed": False
-    })
+    }
+)
+
+igv.load_track(track)
 ```
 
-#### Embedded Features
-
-Features can also be passed directly to tracks.
+#### Remove a track
 
 ```python
-b.load_track({
-    "name": "Copy number",
-    "type": "seg",
-    "displayMode": "EXPANDED",
-    "height": 100,
-    "isLog": True,
-    "features": [
-        {
-            "chr": "chr20",
-            "start": 1233820,
-            "end": 1235000,
-            "value": 0.8239,
-            "sample": "TCGA-OR-A5J2-01"
-        },
-        {
-            "chr": "chr20",
-            "start": 1234500,
-            "end": 1235180,
-            "value": -0.8391,
-            "sample": "TCGA-OR-A5J3-01"
-        }
-    ]
-})
+
+# It is easy to remove a track by name
+igv.remove_track("HG00103")
 ```
 
 ### Navigation
@@ -146,76 +125,78 @@ b.load_track({
 Zoom in by a factor of 2
 
 ```python
-b.zoom_in()
+igv.zoom_in()
 ```
 
 Zoom out by a factor of 2
 
 ```python
-b.zoom_out()
+igv.zoom_out()
 ```
 
 Jump to a specific locus
 
 ```python
-b.search('chr1:3000-4000')
+igv.locus = 'chr1:3000-4000'
 
+# A helper method is available to avoid having to perform string formatting
+igv.search_locus('chr1', 3000, 4000)
 ```
 
-Jump to a specific gene.  This uses the IGV search web service, which currently supports a limited number of genomes:  hg38, hg19, and mm10.
+Jump to a specific gene. This uses the IGV search web service, which currently supports a limited number of genomes:  hg38, hg19, and mm10.
 To configure a custom search service see the [igv.js documentation](https://github.com/igvteam/igv.js/wiki/Browser-Configuration-2.0#search-object-details)
 
 ```python
-b.search('myc')
-
+igv.locus = 'myc'
 ```
 
 ### SVG output
 
-Saving the current IGV view as an SVG image requires two calls.  
+Displaying the current IGV view as an SVG is simple - and only requires one call now!  
 
 ```python
-b.get_svg()
-
-b.display_svg()
-
+igv.get_svg()
 ```
 
-
-### Events
-
-**_Note: This is an experimental feature._**
-
-```python
-
-def locuschange(data):
-    b.locus = data
-
-    b.on("locuschange", locuschange)
-
-    b.zoom_in()
-
-    return b.locus
-
-```
-
-#### Development
-
-To build and install from source:
+## Development Installation
 
 ```bash
-python setup.py build
-pip install -e .
-jupyter nbextension install --py igv
-jupyter nbextension enable --py igv
-
+# First install the python package. This will also build the JS packages.
+pip install -e ".[test, examples]"
 ```
 
-Creating a conda environment
+When developing your extensions, you need to manually enable your extensions with the
+notebook / lab frontend. For lab, this is done by the command:
+
+```
+jupyter labextension install @jupyter-widgets/jupyterlab-manager --no-build
+jupyter labextension install .
+```
+
+For classic notebook, you can run:
+
+```
+jupyter nbextension install --sys-prefix --symlink --overwrite --py igv_jupyterlab
+jupyter nbextension enable --sys-prefix --py igv_jupyterlab
+```
+
+Note that the `--symlink` flag doesn't work on Windows, so you will here have to run
+the `install` command every time that you rebuild your extension. For certain installations
+you might also need another flag instead of `--sys-prefix`, but we won't cover the meaning
+of those flags here.
+
+### How to see your changes
+#### Typescript:
+To continuously monitor the project for changes and automatically trigger a rebuild, start Jupyter in watch mode:
 ```bash
-conda create -n test python=3.7.1
-conda activate test
-conda install pip
-conda install jupyter
-
+jupyter lab --watch
 ```
+And in a separate session, begin watching the source directory for changes:
+```bash
+npm run watch
+```
+
+After a change wait for the build to finish and then refresh your browser and the changes should take effect.
+
+#### Python:
+If you make a change to the python code then you will need to restart the notebook kernel to have it take effect.

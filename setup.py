@@ -1,30 +1,117 @@
-import setuptools
+#!/usr/bin/env python
+# coding: utf-8
 
-with open("README.md", "r") as fh:
-    long_description =  fh.read()
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
 
-setuptools.setup(name='igv-jupyter',
-                 packages=['igv'],
-                 version='0.9.8',
-                 description='Jupyter extension for embedding the igv.js genome visualization in a notebook',
-                 long_description=long_description,
-                 long_description_content_type="text/markdown",
-                 license='MIT',
-                 author='Jim Robinson',
-                 url='https://github.com/igvteam/igv.js-jupyter',
-                 # download_url='https://github.com/igvteam/igv.js-jupyter/archive/0.2.1.tar.gz',
-                 keywords=['igv', 'bioinformatics', 'genomics', 'visualization', 'ipython', 'jupyter'],
-                 classifiers=[
-                     'Development Status :: 4 - Beta',
-                     'Intended Audience :: Science/Research',
-                     'Intended Audience :: Developers',
-                     'License :: OSI Approved :: MIT License',
-                     'Programming Language :: Python',
-                     'Framework :: IPython',
-                 ],
-                 install_requires=[
-                     'jupyter',
-                     'notebook>=4.2.0',
-                 ],
-                 package_data={'igv': ['static/extension.js', 'static/igvjs/*']},
-                 )
+from __future__ import print_function
+from glob import glob
+from os.path import join as pjoin
+
+
+from setupbase import (
+    create_cmdclass, install_npm, ensure_targets,
+    find_packages, combine_commands, ensure_python,
+    get_version, HERE
+)
+
+from setuptools import setup
+
+
+# The name of the project
+name = 'igv_jupyterlab'
+
+# Ensure a valid python version
+ensure_python('>=3.4')
+
+# Get our version
+version = get_version(pjoin(name, '_version.py'))
+
+nb_path = pjoin(HERE, name, 'nbextension', 'static')
+lab_path = pjoin(HERE, name, 'labextension')
+
+# Representative files that should exist after a successful build
+jstargets = [
+    pjoin(nb_path, 'index.js'),
+    pjoin(HERE, 'lib', 'plugin.js'),
+]
+
+package_data_spec = {
+    name: [
+        'nbextension/static/*.*js*',
+        'labextension/*.tgz'
+    ]
+}
+
+data_files_spec = [
+    ('share/jupyter/nbextensions/igv_jupyterlab',
+        nb_path, '*.js*'),
+    ('share/jupyter/lab/extensions', lab_path, '*.tgz'),
+    ('etc/jupyter/nbconfig/notebook.d' , HERE, 'igv_jupyterlab.json')
+]
+
+
+cmdclass = create_cmdclass('jsdeps', package_data_spec=package_data_spec,
+    data_files_spec=data_files_spec)
+cmdclass['jsdeps'] = combine_commands(
+    install_npm(HERE, build_cmd='build:all'),
+    ensure_targets(jstargets),
+)
+
+
+setup_args = dict(
+    name            = name,
+    description     = 'igv-jupyterlab is an extension for Jupyter Lab and Notebook which wraps igv.js.',
+    version         = version,
+    scripts         = glob(pjoin('scripts', '*')),
+    cmdclass        = cmdclass,
+    packages        = find_packages(),
+    author          = 'Oxford Nanopore Technologies',
+    author_email    = 'thomas.rich@nanoporetech.com',
+    url             = 'https://github.com/epi2melabs/igv-jupyterlab',
+    license         = 'BSD',
+    platforms       = "Linux, Mac OS X, Windows",
+    keywords        = ['Jupyter', 'Widgets', 'IPython'],
+    classifiers     = [
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'License :: OSI Approved :: BSD License',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Framework :: Jupyter',
+    ],
+    include_package_data = True,
+    install_requires = [
+        'ipywidgets>=7.0.0',
+        'typing_extensions'
+    ],
+    extras_require = {
+        'test': [
+            'pytest>=4.6',
+            'pytest-cov',
+            'nbval',
+        ],
+        'examples': [
+            # Any requirements for the examples to run
+        ],
+        'docs': [
+            'sphinx>=1.5',
+            'recommonmark',
+            'sphinx_rtd_theme',
+            'nbsphinx>=0.2.13,<0.4.0',
+            'jupyter_sphinx',
+            'nbsphinx-link',
+            'pytest_check_links',
+            'pypandoc',
+        ],
+    },
+    entry_points = {
+    },
+)
+
+if __name__ == '__main__':
+    setup(**setup_args)
