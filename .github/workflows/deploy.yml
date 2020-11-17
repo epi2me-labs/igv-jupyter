@@ -20,8 +20,8 @@ jobs:
           access: public
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
-      - run: >-
+          python-version: '3.8.5'
+      - run: |
           pip install wheel
           python setup.py sdist bdist_wheel
       - uses: pypa/gh-action-pypi-publish@master
