@@ -27,6 +27,7 @@ interface IBrowserGenome {
   id: string,
   name: string,
   fastaURL: string,
+  indexed: boolean,
   indexURL?: string,
   aliasURL?: string,
   cytobandURL?: string,
