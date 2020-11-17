@@ -1,0 +1,28 @@
+name: Deploy
+on:  
+  push:
+    branches:
+      - jupyter
+    tags:
+      - '*'
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - run: npm install
+      - uses: JS-DevTools/npm-publish@v1
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - run: python setup.py sdist bdist_wheel
+      - uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: ${{ secrets.TWINE_USERNAME }}
+          password: ${{ secrets.TWINE_PASSWORD }}
