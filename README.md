@@ -35,11 +35,7 @@ in a cell and call its API from the notebook.
 
 ### Initialization
 
-To insert an IGV instance into a cell:  
-
-(1) create an igv.Browser object,and (2) call showBrowser on the instance.
-
-Example:
+To insert an IGV instance into a cell: 
 
 ```python
 from igv_jupyterlab import IGV
