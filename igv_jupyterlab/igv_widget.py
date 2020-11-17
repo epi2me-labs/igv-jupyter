@@ -11,6 +11,8 @@ from typing import List, Optional, Any, Union
 from ._frontend import module_name, module_version
 
 
+# Unused until such time as this issue gets resolved:
+# https://github.com/python/mypy/issues/4617
 class Track(TypedDict):
     """
     Create a browser track config.
@@ -44,7 +46,7 @@ class Reference(TypedDict):
     indexed: Optional[bool]
     aliasURL: Optional[str]
     cytobandURL: Optional[str]
-    tracks: Optional[List[Track]]
+    tracks: Optional[List[Dict]] # Should be Optional[List[Track]] ideally, see above
 
 
 class IGV(DOMWidget):
@@ -72,7 +74,7 @@ class IGV(DOMWidget):
         self, 
         genome: Union[str, Reference], 
         locus: str = None,
-        tracks: List[Track] = None
+        tracks: List[Dict] = None # Should be List[Track] ideally, see top
         ):
         """
         Initialises an IGV browser instance. Basic information is
@@ -199,7 +201,8 @@ class IGV(DOMWidget):
         autoHeight: bool = None,
         minHeight: int = None,
         maxHeight: int = None,
-        ) -> Track:
+        **kwargs
+        ) -> Dict:
         """
         Returns an instance of Track, which can be
         used as an input to IGVBrowser initialisation or
@@ -208,16 +211,19 @@ class IGV(DOMWidget):
         See a description of options here:
         https://github.com/igvteam/igv.js/wiki/Tracks-2.0
         """
-        return Track(
+        # Commented out until extra keys are allowed
+        # return Track(
+        return Dict(
             name=name, url=url, indexURL=index_url, 
             indexed=indexed, format=fmt, order=order,
             color=color, height=height, autoHeight=autoHeight,
-            minHeight=minHeight, maxHeight=maxHeight
+            minHeight=minHeight, maxHeight=maxHeight,
+            **kwargs
         )
 
     def load_track(
         self, 
-        track: Track
+        track: Dict
         ):
         """
         Request the browser instance to add the track.
@@ -249,7 +255,7 @@ class IGV(DOMWidget):
         index_url: str = None,
         alias_url: str = None,
         cytoband_url: str = None, 
-        tracks: List[Track] = None
+        tracks: List[Dict] = None # Should be List[Track] ideally, see top
         ) -> Reference:
         """
         Returns an instance of Reference, which can be

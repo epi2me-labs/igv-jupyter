@@ -20,9 +20,6 @@ interface ICustomMessage {
 interface IBrowserTrack {
   name: string,
   url: string,
-  indexURL: string,
-  format: string,
-  exists?: boolean,
   [x: string]: any
 }
 
@@ -30,9 +27,9 @@ interface IBrowserGenome {
   id: string,
   name: string,
   fastaURL: string,
-  indexURL: string,
+  indexURL?: string,
   aliasURL?: string,
-  cytobrandURL?: string,
+  cytobandURL?: string,
   tracks?: IBrowserTrack[]
 }
 
