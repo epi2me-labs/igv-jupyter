@@ -30,3 +30,4 @@ jobs:
         with:
           user: ${{ secrets.TWINE_USERNAME }}
           password: ${{ secrets.TWINE_PASSWORD }}
+          packages_dir: dist/igv_jupyterlab*
