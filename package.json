@@ -1,6 +1,6 @@
 {
   "name": "@epi2melabs/igv-jupyterlab",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "igv-jupyterlab is an extension for Jupyter Lab and traditional Jupyter Notebooks which wraps igv.js.",
   "keywords": [
     "jupyter",
