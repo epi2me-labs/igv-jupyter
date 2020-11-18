@@ -89,13 +89,12 @@ igv.load_track(track)
 
 #### Local File
 
-Tracks can be loaded from local files using the Jupyter web server by prepending "files" to the path.
-The path is relative to the notebook file.  
+Tracks can be loaded from local files using the Jupyter web server by prepending "tree" to the path.
 
 ```python
 track = IGV.create_track(
     name="Local VCF",
-    url="files/data/example.vcf",
+    url="/tree/absolute/path/to/example.vcf",
     format="vcf",
     type="variant",
     indexed=False
