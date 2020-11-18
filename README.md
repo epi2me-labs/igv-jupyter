@@ -47,7 +47,7 @@ IGV(genome="hg19")
 
 # For all other genomes, we must construct a configuration object.
 # A helper method supplied to make this easier.
-genome = igv.create_genome(
+genome = IGV.create_genome(
     name="Human (GRCh38/hg38)",
     fasta_url="https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa",
     index_url="https://s3.amazonaws.com/igv.broadinstitute.org/genomes/seq/hg38/hg38.fa.fai",
@@ -95,7 +95,7 @@ Tracks can be loaded from local files using the Jupyter web server by prepending
 The path is relative to the notebook file.  
 
 ```python
-track = IGV.load_track(
+track = IGV.create_track(
     {
         "name": "Local VCF",
         "url": "files/data/example.vcf",
