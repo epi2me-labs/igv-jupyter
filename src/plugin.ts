@@ -8,7 +8,7 @@ import * as widgetExports from './widget';
 
 import { MODULE_NAME, MODULE_VERSION } from './version';
 
-const EXTENSION_ID = 'igv-jupyterlab:plugin';
+const EXTENSION_ID = '@epi2melabs/igv-jupyterlab:plugin';
 
 /**
  * The example plugin.
