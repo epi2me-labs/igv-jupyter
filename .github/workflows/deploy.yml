@@ -26,4 +26,5 @@ jobs:
       - run: |
           pip install wheel twine
           python setup.py sdist bdist_wheel
-          twine upload -u ${{ secrets.TWINE_USERNAME }} -p ${{ secrets.TWINE_PASSWORD }} dist/igv_jupyterlab*
+          PWORD="${{ secrets.TWINE_PASSWORD }}"
+          twine upload -u ${{ secrets.TWINE_USERNAME }} -p $PWORD dist/igv_jupyterlab*
