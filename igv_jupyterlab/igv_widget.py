@@ -11,10 +11,11 @@ from typing import List, Optional, Any, Union
 from ._frontend import module_name, module_version
 
 
-# Unused until such time as this issue gets resolved:
-# https://github.com/python/mypy/issues/4617
 class Track(TypedDict):
     """
+    # Unused until such time as this issue gets resolved:
+    # https://github.com/python/mypy/issues/4617
+
     Create a browser track config.
     See a description for options here:
 
@@ -213,7 +214,7 @@ class IGV(DOMWidget):
         """
         # Commented out until extra keys are allowed
         # return Track(
-        return Dict(
+        return dict(
             name=name, url=url, indexURL=index_url, 
             indexed=indexed, format=fmt, order=order,
             color=color, height=height, autoHeight=autoHeight,

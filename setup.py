@@ -67,8 +67,8 @@ setup_args = dict(
     cmdclass        = cmdclass,
     packages        = find_packages(),
     author          = 'Oxford Nanopore Technologies',
-    author_email    = 'thomas.rich@nanoporetech.com',
-    url             = 'https://github.com/epi2melabs/igv-jupyterlab',
+    author_email    = 'epi2melabs@nanoporetech.com',
+    url             = 'https://github.com/epi2me-labs/igv-jupyterlab',
     license         = 'BSD',
     platforms       = "Linux, Mac OS X, Windows",
     keywords        = ['Jupyter', 'Widgets', 'IPython'],
@@ -77,11 +77,10 @@ setup_args = dict(
         'Intended Audience :: Science/Research',
         'License :: OSI Approved :: BSD License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Framework :: Jupyter',
     ],
     include_package_data = True,
@@ -94,9 +93,6 @@ setup_args = dict(
             'pytest>=4.6',
             'pytest-cov',
             'nbval',
-        ],
-        'examples': [
-            # Any requirements for the examples to run
         ],
         'docs': [
             'sphinx>=1.5',

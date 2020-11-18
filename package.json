@@ -13,20 +13,20 @@
     "dist/*.js",
     "css/*.css"
   ],
-  "homepage": "https://github.com/epi2melabs/igv-jupyterlab",
+  "homepage": "https://github.com/epi2me-labs/igv-jupyterlab",
   "bugs": {
-    "url": "https://github.com/epi2melabs/igv-jupyterlab/issues"
+    "url": "https://github.com/epi2me-labs/igv-jupyterlab/issues"
   },
   "license": "BSD-3-Clause",
   "author": {
-    "name": "trich",
-    "email": "thomas.rich@nanoporetech.com"
+    "name": "Oxford Nanopore Technologies",
+    "email": "epi2melabs@nanoporetech.com"
   },
   "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/epi2melabs/igv-jupyterlab"
+    "url": "https://github.com/epi2me-labs/igv-jupyterlab"
   },
   "scripts": {
     "build": "npm run build:lib && npm run build:nbextension",
