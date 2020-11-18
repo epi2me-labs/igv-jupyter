@@ -119,17 +119,17 @@ export class IGVMainView extends DOMWidgetView {
     }
   }
 
-  loadTrack = (config: IBrowserTrack) => {
+  loadTrack = ({ track }: { track: IBrowserTrack }) => {
     const browser = this.getBrowser(this.options.id)
     if (browser) {
-      browser.loadTrack(config)
+      browser.loadTrack(track)
     }
   }
 
-  loadGenome = (config: IBrowserGenome) => {
+  loadGenome = ({ genome }: { genome: IBrowserGenome }) => {
     const browser = this.getBrowser(this.options.id)
     if (browser) {
-      browser.loadGenome(config)
+      browser.loadGenome(genome)
     }
   }
 

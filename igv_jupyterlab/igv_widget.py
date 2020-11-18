@@ -231,7 +231,7 @@ class IGV(DOMWidget):
         """
         self.send({
             "type": "loadTrack",
-            **self._filter_none(track)
+            "track": self._filter_none(track)
         })
 
     def remove_track(
@@ -281,7 +281,7 @@ class IGV(DOMWidget):
         """
         self.send({
             "type": "loadGenome",
-            **self._filter_none(genome)
+            "genome": self._filter_none(genome)
         })
 
     def _event_setter(
