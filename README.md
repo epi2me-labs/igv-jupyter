@@ -78,12 +78,10 @@ objects are described in the [igv.js documentation](https://github.com/igvteam/i
 
 ```python
 track = IGV.create_track(
-    {
-        "name": "Segmented CN",
-        "url": "https://data.broadinstitute.org/igvdata/test/igv-web/segmented_data_080520.seg.gz",
-        "format": "seg",
-        "indexed": False
-    }
+    name="Segmented CN",
+    url="https://data.broadinstitute.org/igvdata/test/igv-web/segmented_data_080520.seg.gz",
+    format="seg",
+    indexed=False
 )
 
 igv.load_track(track)
@@ -96,13 +94,11 @@ The path is relative to the notebook file.
 
 ```python
 track = IGV.create_track(
-    {
-        "name": "Local VCF",
-        "url": "files/data/example.vcf",
-        "format": "vcf",
-        "type": "variant",
-        "indexed": False
-    }
+    name="Local VCF",
+    url="files/data/example.vcf",
+    format="vcf",
+    type="variant",
+    indexed=False
 )
 
 igv.load_track(track)
