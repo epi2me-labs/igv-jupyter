@@ -19,7 +19,7 @@ Or if you use jupyterlab:
 
 ```bash
 pip install igv_jupyterlab
-jupyter labextension install @jupyter-widgets/jupyterlab-manager
+jupyter labextension install @jupyter-widgets/jupyterlab-manager @epi2melabs/igv-jupyterlab
 ```
 
 If you are using Jupyter Notebook 5.2 or earlier, you may also need to enable
