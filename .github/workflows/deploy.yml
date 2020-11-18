@@ -24,10 +24,6 @@ jobs:
         with:
           python-version: '3.8.5'
       - run: |
-          pip install wheel
+          pip install wheel twine
           python setup.py sdist bdist_wheel
-      - uses: pypa/gh-action-pypi-publish@master
-        with:
-          user: ${{ secrets.TWINE_USERNAME }}
-          password: ${{ secrets.TWINE_PASSWORD }}
-          packages_dir: dist/igv_jupyterlab*
+          twine upload -u ${{ secrets.TWINE_USERNAME }} -p ${{ secrets.TWINE_PASSWORD }} dist/igv_jupyterlab*
